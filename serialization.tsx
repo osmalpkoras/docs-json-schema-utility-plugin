@@ -17,22 +17,22 @@ export default function SerializationPage() {
             <PageContainer>
                 <PageHeader />
 
-                <div className="space-y-6">
-                    <p className="text-lg text-muted-foreground">
-                        Serialization converts your UObject instances to JSON, and deserialization reconstructs them from JSON. Both operations use the cached schema for efficient, performant conversion.
-                    </p>
-
-                    <h2>Serialization: Objects to JSON</h2>
-                    <p>
-                        Convert any object implementing IJsonSchema to JSON using one of two methods:
-                    </p>
-
-                    <h3>To JSON Object</h3>
-                    <p>
-                        Get a structured FJsonObject that you can manipulate before final serialization:
-                    </p>
-
+                <div>
                     <LanguageToggleProvider>
+                        <p>
+                            Serialization converts your UObject instances to JSON, and deserialization reconstructs them from JSON. Both operations use the cached schema for efficient, performant conversion. It is useful for saving player progress, network replication, API communication, and configuration management.
+                        </p>
+
+                        <h2>Serialization: Objects to JSON</h2>
+                        <p>
+                            Convert any object implementing IJsonSchema to JSON using one of two methods:
+                        </p>
+
+                        <h3>To JSON Object</h3>
+                        <p>
+                            Get a structured FJsonObject that you can manipulate before final serialization:
+                        </p>
+
                         <CodeExample
                             title="Serialize to JSON Object"
                             description="Convert object to FJsonObject for manipulation"
@@ -54,14 +54,12 @@ if (JsonObject.IsValid())
     JsonObject->SetNumberField(TEXT("level"), 25);
 }`}
                         />
-                    </LanguageToggleProvider>
 
-                    <h3>To JSON String</h3>
-                    <p>
-                        Directly serialize to a JSON string for transmission, storage, or logging:
-                    </p>
+                        <h3>To JSON String</h3>
+                        <p>
+                            Directly serialize to a JSON string for transmission, storage, or logging:
+                        </p>
 
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Serialize to JSON String"
                             description="Convert object directly to JSON string"
@@ -75,25 +73,23 @@ FString JsonString = Character->ToJsonString();
 // Result example:
 // {"character_name":"Aragorn","level":20,"health":150}`}
                         />
-                    </LanguageToggleProvider>
 
-                    <Callout type="tip" title="Schema-Generated Property Names">
+                        <Callout type="tip" title="Schema-Generated Property Names">
+                            <p>
+                                Property names are automatically converted from PascalCase (CharacterName) to snake_case (character_name) in JSON. This follows common JSON naming conventions.
+                            </p>
+                        </Callout>
+
+                        <h2>Deserialization: JSON to Objects</h2>
                         <p>
-                            Property names are automatically converted from PascalCase (CharacterName) to snake_case (character_name) in JSON. This follows common JSON naming conventions.
+                            Reconstruct objects from JSON using the schema definition:
                         </p>
-                    </Callout>
 
-                    <h2>Deserialization: JSON to Objects</h2>
-                    <p>
-                        Reconstruct objects from JSON using the schema definition:
-                    </p>
+                        <h3>From JSON Object</h3>
+                        <p>
+                            Initialize an object from a structured FJsonObject:
+                        </p>
 
-                    <h3>From JSON Object</h3>
-                    <p>
-                        Initialize an object from a structured FJsonObject:
-                    </p>
-
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Deserialize from JSON Object"
                             description="Initialize object from FJsonObject structure"
@@ -119,14 +115,12 @@ else
     UE_LOG(LogTemp, Error, TEXT("Failed to deserialize character"));
 }`}
                         />
-                    </LanguageToggleProvider>
 
-                    <h3>From JSON String</h3>
-                    <p>
-                        Initialize an object directly from a JSON string:
-                    </p>
+                        <h3>From JSON String</h3>
+                        <p>
+                            Initialize an object directly from a JSON string:
+                        </p>
 
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Deserialize from JSON String"
                             description="Initialize object directly from JSON string"
@@ -152,14 +146,12 @@ else
     UE_LOG(LogTemp, Error, TEXT("Deserialization failed"));
 }`}
                         />
-                    </LanguageToggleProvider>
 
-                    <h2>Round-Trip Serialization</h2>
-                    <p>
-                        A key feature is round-trip serialization: convert object → JSON → object and preserve all data:
-                    </p>
+                        <h2>Round-Trip Serialization</h2>
+                        <p>
+                            A key feature is round-trip serialization: convert object → JSON → object and preserve all data:
+                        </p>
 
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Round-Trip Serialization"
                             description="Serialize to JSON and back with full data integrity"
@@ -180,20 +172,18 @@ check(Reconstructed->CharacterName == Original->CharacterName);
 check(Reconstructed->Level == Original->Level);
 check(Reconstructed->Health == Original->Health);`}
                         />
-                    </LanguageToggleProvider>
 
-                    <Callout type="info" title="Data Integrity">
+                        <Callout type="info" title="Data Integrity">
+                            <p>
+                                Round-trip serialization is lossless for all supported property types. Complex objects and arrays are fully preserved.
+                            </p>
+                        </Callout>
+
+                        <h2>Error Handling</h2>
                         <p>
-                            Round-trip serialization is lossless for all supported property types. Complex objects and arrays are fully preserved.
+                            Serialization returns a JSON object or string, and deserialization returns a boolean indicating success:
                         </p>
-                    </Callout>
 
-                    <h2>Error Handling</h2>
-                    <p>
-                        Serialization returns a JSON object or string, and deserialization returns a boolean indicating success:
-                    </p>
-
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Error Handling"
                             description="Check success status for serialization and deserialization"
@@ -224,16 +214,14 @@ else
     // Character remains in default state
 }`}
                         />
-                    </LanguageToggleProvider>
 
-                    <h2>Working with Complex Types</h2>
+                        <h2>Working with Complex Types</h2>
 
-                    <h3>Arrays</h3>
-                    <p>
-                        Arrays are automatically serialized and deserialized:
-                    </p>
+                        <h3>Arrays</h3>
+                        <p>
+                            Arrays are automatically serialized and deserialized:
+                        </p>
 
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Array Serialization"
                             description="Automatically serialize and deserialize array properties"
@@ -259,14 +247,12 @@ AParty* LoadedParty = GetWorld()->SpawnActor<AParty>();
 LoadedParty->FromJsonString(JsonString);
 // MemberNames now contains the three original names`}
                         />
-                    </LanguageToggleProvider>
 
-                    <h3>Nested Objects</h3>
-                    <p>
-                        Nested objects are recursively serialized and deserialized:
-                    </p>
+                        <h3>Nested Objects</h3>
+                        <p>
+                            Nested objects are recursively serialized and deserialized:
+                        </p>
 
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Nested Object Serialization"
                             description="Recursively serialize and deserialize nested IJsonSchema objects"
@@ -306,49 +292,6 @@ FString JsonString = Warrior->ToJsonString();
 // Result: {"name":"Aragorn","equipped_weapon":{"name":"Anduril","damage":50}}`}
                         />
                     </LanguageToggleProvider>
-
-                    <h2>Blueprint Integration</h2>
-                    <p>
-                        Serialization methods are available in Blueprint as well:
-                    </p>
-
-                    <LanguageToggleProvider>
-                        <CodeExample
-                            title="Blueprint Serialization Workflow"
-                            description="Use serialization methods in Blueprint visual scripting"
-                            cppCode={`// In Blueprint:
-// 1. Create character instance
-// 2. Call "To Json String" node
-// 3. Get JSON string output
-// 4. Use for saving, networking, or API calls
-
-// Deserialization:
-// 1. Get JSON string from file, network, or API
-// 2. Create new character instance
-// 3. Call "From Json String" node with JSON data
-// 4. Check boolean output for success`}
-                        />
-                    </LanguageToggleProvider>
-
-                    <Callout type="warning" title="Instance Lifecycle">
-                        <p>
-                            When deserializing, always create a new instance first. Deserialization will populate the properties of the existing instance—it doesn't create the object for you.
-                        </p>
-                    </Callout>
-
-                    <h2>Performance Considerations</h2>
-                    <ul className="space-y-2">
-                        <li><strong>Cached Schemas:</strong> No reflection overhead at runtime due to pre-built schemas</li>
-                        <li><strong>Direct Property Access:</strong> Properties are accessed directly, not through reflection</li>
-                        <li><strong>Minimal Allocations:</strong> Reuses Unreal's JSON framework efficiently</li>
-                        <li><strong>Safe for Gameplay:</strong> Serialization is performant enough for runtime game logic</li>
-                    </ul>
-
-                    <Callout type="info" title="Use Cases">
-                        <p>
-                            Serialization is appropriate for saving player progress, network replication, API communication, and configuration management—all within gameplay performance budgets.
-                        </p>
-                    </Callout>
                 </div>
 
                 <PageFooter />

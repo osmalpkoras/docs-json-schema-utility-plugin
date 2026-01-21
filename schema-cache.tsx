@@ -16,95 +16,94 @@ export default function SchemaCachePage() {
         <SiteDocumentation>
             <PageContainer>
                 <PageHeader />
-
-                <div className="space-y-6">
-                    <p className="text-lg text-muted-foreground">
-                        The Schema Cache is a data asset that stores pre-generated JSON schemas for all your classes that implement IJsonSchema. Using a cache enables efficient runtime serialization and schema export without reflection overhead.
-                    </p>
-
-                    <h2>What is the Schema Cache?</h2>
-                    <p>
-                        The Schema Cache is a UJsonSchemaCache data asset that contains pre-computed JSON schemas for all your classes that implement IJsonSchema. The plugin uses these pre-built definitions for:
-                    </p>
-                    <ul className="space-y-2">
-                        <li><strong>Serialization:</strong> Converting objects to JSON</li>
-                        <li><strong>Deserialization:</strong> Converting JSON back to objects</li>
-                        <li><strong>Schema Export:</strong> Providing schemas to external systems like OpenAI's structured output</li>
-                    </ul>
-
-                    <p className="mt-4">
-                        By pre-computing schemas at compile-time rather than using reflection at runtime, the plugin achieves efficient, performant serialization suitable for gameplay and runtime use.
-                    </p>
-
-                    <h2>Creating a Schema Cache</h2>
-                    <p>
-                        Follow these steps to create a new Schema Cache data asset:
-                    </p>
-
-                    <ol className="space-y-4 list-decimal list-inside">
-                        <li>
-                            <strong>Open Content Browser</strong> and navigate to your project's content folder
-                        </li>
-                        <li>
-                            <strong>Right-click in empty space</strong> and select <strong>Miscellaneous → Data Asset</strong>
-                        </li>
-                        <li>
-                            <strong>Choose UJsonSchemaCache</strong> as the data asset class
-                        </li>
-                        <li>
-                            <strong>Name it appropriately</strong> (e.g., "DefaultJsonSchemaCache" or "GameDataSchemaCache")
-                        </li>
-                        <li>
-                            <strong>Double-click to open</strong> and verify it's created (it will be mostly empty at first)
-                        </li>
-                    </ol>
-
-                    <h2>Configuring the Cache</h2>
-                    <p>
-                        Point your project to use the Schema Cache in project settings:
-                    </p>
-
-                    <ol className="space-y-4 list-decimal list-inside">
-                        <li>
-                            Go to <strong>Edit → Project Settings</strong>
-                        </li>
-                        <li>
-                            Navigate to <strong>Plugins → JSON Object & Schema Utility</strong>
-                        </li>
-                        <li>
-                            In the <strong>Default Schema Cache</strong> dropdown, select your cache asset
-                        </li>
-                        <li>
-                            <strong>Save</strong> the project settings
-                        </li>
-                    </ol>
-
-                    <h2>Automatic Cache Building</h2>
-                    <p>
-                        The cache is automatically built in these scenarios:
-                    </p>
-                    <ul className="space-y-2">
-                        <li><strong>Editor Startup:</strong> When you open the Unreal Engine editor, the cache is built for all IJsonSchema classes in loaded modules</li>
-                        <li><strong>Hot Reload:</strong> When you modify and recompile a class (e.g., in Visual Studio during the editor session), the cache is automatically updated</li>
-                        <li><strong>Full Recompile:</strong> When you compile your project through the editor's compile button</li>
-                    </ul>
-
-                    <p className="mt-4">
-                        You don't need to take any manual action for these automatic builds—they happen transparently in the background.
-                    </p>
-
-                    <Callout type="info" title="Automatic Generation">
-                        <p>
-                            The plugin's editor module automatically detects all compiled classes that implement IJsonSchema and generates their schemas, storing them in the configured cache.
-                        </p>
-                    </Callout>
-
-                    <h2>Using the Cache at Runtime</h2>
-                    <p>
-                        The runtime automatically uses the configured cache during serialization and deserialization. You typically don't need to interact with it directly, but if needed, you can access it programmatically:
-                    </p>
-
+                <div>
                     <LanguageToggleProvider>
+                        <p>
+                            The Schema Cache is a data asset that stores pre-generated JSON schemas for all your classes that implement IJsonSchema. Using a cache enables efficient runtime serialization and schema export without reflection overhead.
+                        </p>
+
+                        <h2>What is the Schema Cache?</h2>
+                        <p>
+                            The Schema Cache is a UJsonSchemaCache data asset that contains pre-computed JSON schemas for all your classes that implement IJsonSchema. The plugin uses these pre-built definitions for:
+                        </p>
+                        <ul className="space-y-2">
+                            <li><strong>Serialization:</strong> Converting objects to JSON</li>
+                            <li><strong>Deserialization:</strong> Converting JSON back to objects</li>
+                            <li><strong>Schema Export:</strong> Providing schemas to external systems like OpenAI's structured output</li>
+                        </ul>
+
+                        <p className="mt-4">
+                            By pre-computing schemas at compile-time rather than using reflection at runtime, the plugin achieves efficient, performant serialization suitable for gameplay and runtime use.
+                        </p>
+
+                        <h2>Creating a Schema Cache</h2>
+                        <p>
+                            Follow these steps to create a new Schema Cache data asset:
+                        </p>
+
+                        <ol className="space-y-4 list-decimal list-inside">
+                            <li>
+                                <strong>Open Content Browser</strong> and navigate to your project's content folder
+                            </li>
+                            <li>
+                                <strong>Right-click in empty space</strong> and select <strong>Miscellaneous → Data Asset</strong>
+                            </li>
+                            <li>
+                                <strong>Choose UJsonSchemaCache</strong> as the data asset class
+                            </li>
+                            <li>
+                                <strong>Name it appropriately</strong> (e.g., "DefaultJsonSchemaCache" or "GameDataSchemaCache")
+                            </li>
+                            <li>
+                                <strong>Double-click to open</strong> and verify it's created (it will be mostly empty at first)
+                            </li>
+                        </ol>
+
+                        <h2>Configuring the Cache</h2>
+                        <p>
+                            Point your project to use the Schema Cache in project settings:
+                        </p>
+
+                        <ol className="space-y-4 list-decimal list-inside">
+                            <li>
+                                Go to <strong>Edit → Project Settings</strong>
+                            </li>
+                            <li>
+                                Navigate to <strong>Plugins → JSON Object & Schema Utility</strong>
+                            </li>
+                            <li>
+                                In the <strong>Default Schema Cache</strong> dropdown, select your cache asset
+                            </li>
+                            <li>
+                                <strong>Save</strong> the project settings
+                            </li>
+                        </ol>
+
+                        <h2>Automatic Cache Building</h2>
+                        <p>
+                            The cache is automatically built in these scenarios:
+                        </p>
+                        <ul className="space-y-2">
+                            <li><strong>Editor Startup:</strong> When you open the Unreal Engine editor, the cache is built for all IJsonSchema classes in loaded modules</li>
+                            <li><strong>Hot Reload:</strong> When you modify and recompile a class (e.g., in Visual Studio during the editor session), the cache is automatically updated</li>
+                            <li><strong>Full Recompile:</strong> When you compile your project through the editor's compile button</li>
+                        </ul>
+
+                        <p className="mt-4">
+                            You don't need to take any manual action for these automatic builds—they happen transparently in the background.
+                        </p>
+
+                        <Callout type="info" title="Automatic Generation">
+                            <p>
+                                The plugin's editor module automatically detects all compiled classes that implement IJsonSchema and generates their schemas, storing them in the configured cache.
+                            </p>
+                        </Callout>
+
+                        <h2>Using the Cache at Runtime</h2>
+                        <p>
+                            The runtime automatically uses the configured cache during serialization and deserialization. You typically don't need to interact with it directly, but if needed, you can access it programmatically:
+                        </p>
+
                         <CodeExample
                             title="Accessing the Schema Cache"
                             description="Get and use the schema cache at runtime"
@@ -120,25 +119,23 @@ if (Schema)
     UE_LOG(LogTemp, Warning, TEXT("Schema found for UMyClass"));
 }`}
                         />
-                    </LanguageToggleProvider>
 
-                    <h2>Serialization with Cache</h2>
-                    <p>
-                        When you serialize an object, the plugin uses the cache to efficiently convert it to JSON:
-                    </p>
+                        <h2>Serialization with Cache</h2>
+                        <p>
+                            When you serialize an object, the plugin uses the cache to efficiently convert it to JSON:
+                        </p>
 
-                    <ol className="space-y-2 list-decimal list-inside">
-                        <li>Look up the schema for the object's class</li>
-                        <li>Iterate through all properties defined in the schema</li>
-                        <li>Convert each property value to a JSON representation</li>
-                        <li>Build and return the final JSON object</li>
-                    </ol>
+                        <ol className="space-y-2 list-decimal list-inside">
+                            <li>Look up the schema for the object's class</li>
+                            <li>Iterate through all properties defined in the schema</li>
+                            <li>Convert each property value to a JSON representation</li>
+                            <li>Build and return the final JSON object</li>
+                        </ol>
 
-                    <p>
-                        Since the schema is pre-built, no expensive reflection is needed at runtime:
-                    </p>
+                        <p>
+                            Since the schema is pre-built, no expensive reflection is needed at runtime:
+                        </p>
 
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Serialization with Cached Schema"
                             description="Efficient serialization without reflection overhead"
@@ -151,21 +148,19 @@ Character->Level = 5;
 FString JsonString = Character->ToJsonString();
 // Result: {"character_name":"Hero","level":5}`}
                         />
-                    </LanguageToggleProvider>
 
-                    <h2>Deserialization with Cache</h2>
-                    <p>
-                        During deserialization, the cache enables the plugin to efficiently reconstruct objects from JSON:
-                    </p>
+                        <h2>Deserialization with Cache</h2>
+                        <p>
+                            During deserialization, the cache enables the plugin to efficiently reconstruct objects from JSON:
+                        </p>
 
-                    <ol className="space-y-2 list-decimal list-inside">
-                        <li>Look up the schema for the target class</li>
-                        <li>Parse the incoming JSON</li>
-                        <li>Map JSON fields to object properties based on the schema</li>
-                        <li>Apply the values to the object</li>
-                    </ol>
+                        <ol className="space-y-2 list-decimal list-inside">
+                            <li>Look up the schema for the target class</li>
+                            <li>Parse the incoming JSON</li>
+                            <li>Map JSON fields to object properties based on the schema</li>
+                            <li>Apply the values to the object</li>
+                        </ol>
 
-                    <LanguageToggleProvider>
                         <CodeExample
                             title="Deserialization with Cached Schema"
                             description="Efficient deserialization from JSON using the cached schema"
@@ -183,95 +178,93 @@ if (Character->FromJsonString(JsonInput))
         *Character->CharacterName, Character->Level);
 }`}
                         />
-                    </LanguageToggleProvider>
 
-                    <h2>Manual Cache Rebuild</h2>
-                    <p>
-                        If you need to manually rebuild the cache (for example, after moving or renaming files), use the editor's Tools menu:
-                    </p>
-
-                    <ol className="space-y-4 list-decimal list-inside">
-                        <li>
-                            Go to <strong>Tools → Rebuild JSON Schema Cache</strong> in the main editor menu
-                        </li>
-                        <li>
-                            The plugin will scan all loaded modules for classes implementing IJsonSchema
-                        </li>
-                        <li>
-                            Generated schemas will be written to the configured cache asset
-                        </li>
-                        <li>
-                            You'll see confirmation in the Output Log when the rebuild completes
-                        </li>
-                    </ol>
-
-                    <Callout type="info" title="When to Manually Rebuild">
+                        <h2>Manual Cache Rebuild</h2>
                         <p>
-                            Manual rebuild is rarely needed since automatic builds handle editor startup and hot reloads. Use it if you suspect the cache is out of sync, or after significant project reorganization.
+                            If you need to manually rebuild the cache (for example, after moving or renaming files), use the editor's Tools menu:
                         </p>
-                    </Callout>
 
-                    <h2>Best Practices</h2>
+                        <ol className="space-y-4 list-decimal list-inside">
+                            <li>
+                                Go to <strong>Tools → Rebuild JSON Schema Cache</strong> in the main editor menu
+                            </li>
+                            <li>
+                                The plugin will scan all loaded modules for classes implementing IJsonSchema
+                            </li>
+                            <li>
+                                Generated schemas will be written to the configured cache asset
+                            </li>
+                            <li>
+                                You'll see confirmation in the Output Log when the rebuild completes
+                            </li>
+                        </ol>
 
-                    <h3>Create One Cache Per Project (Usually)</h3>
-                    <p>
-                        Most projects use a single Schema Cache. However, if you have multiple distinct sets of classes (e.g., in different plugins), you can use separate caches.
-                    </p>
+                        <Callout type="info" title="When to Manually Rebuild">
+                            <p>
+                                Manual rebuild is rarely needed since automatic builds handle editor startup and hot reloads. Use it if you suspect the cache is out of sync, or after significant project reorganization.
+                            </p>
+                        </Callout>
 
-                    <h3>Place Cache in Appropriate Folder</h3>
-                    <p>
-                        Store your cache in a project-wide location like <code>Content/Config</code> or <code>Content/Data</code> so it's easily found and managed.
-                    </p>
+                        <h2>Best Practices</h2>
 
-                    <h3>Don't Delete Classes Without Recompiling</h3>
-                    <p>
-                        If you remove a class that implements IJsonSchema, recompile your project to update the cache. The old schema will be automatically removed.
-                    </p>
-
-                    <h3>Use Named Caches for Organization</h3>
-                    <p>
-                        If using multiple caches, use descriptive names like "GameplaySchemaCache" or "NetworkingSchemaCache" to keep track of what each cache contains.
-                    </p>
-
-                    <Callout type="warning" title="Cache is Compile-Time Generated">
+                        <h3>Create One Cache Per Project (Usually)</h3>
                         <p>
-                            The cache is generated at editor compile time and baked into your packaged game. Changes to class definitions require recompilation to update the cache.
+                            Most projects use a single Schema Cache. However, if you have multiple distinct sets of classes (e.g., in different plugins), you can use separate caches.
                         </p>
-                    </Callout>
 
-                    <h2>Troubleshooting</h2>
+                        <h3>Place Cache in Appropriate Folder</h3>
+                        <p>
+                            Store your cache in a project-wide location like <code>Content/Config</code> or <code>Content/Data</code> so it's easily found and managed.
+                        </p>
 
-                    <h3>My Class Doesn't Appear in the Cache</h3>
-                    <p>
-                        Make sure:
-                    </p>
-                    <ul className="space-y-1">
-                        <li>Your class implements IJsonSchema</li>
-                        <li>Your project has been compiled</li>
-                        <li>The cache asset is set in Project Settings → Plugins → JSON Object & Schema Utility</li>
-                        <li>Your class is in a loaded module</li>
-                    </ul>
+                        <h3>Don't Delete Classes Without Recompiling</h3>
+                        <p>
+                            If you remove a class that implements IJsonSchema, recompile your project to update the cache. The old schema will be automatically removed.
+                        </p>
 
-                    <p className="mt-2">
-                        If these are all correct, try manually rebuilding the cache via <strong>Tools → Rebuild JSON Schema Cache</strong>.
-                    </p>
+                        <h3>Use Named Caches for Organization</h3>
+                        <p>
+                            If using multiple caches, use descriptive names like "GameplaySchemaCache" or "NetworkingSchemaCache" to keep track of what each cache contains.
+                        </p>
 
-                    <h3>Schema is Out of Date After Code Changes</h3>
-                    <p>
-                        If you modify a class's properties and the schema hasn't updated:
-                    </p>
-                    <ol className="space-y-1 list-decimal list-inside">
-                        <li>Save your class modifications</li>
-                        <li>Recompile the project (the cache automatically updates)</li>
-                        <li>If still out of date, use <strong>Tools → Rebuild JSON Schema Cache</strong></li>
-                    </ol>
+                        <Callout type="warning" title="Cache is Compile-Time Generated">
+                            <p>
+                                The cache is generated at editor compile time and baked into your packaged game. Changes to class definitions require recompilation to update the cache.
+                            </p>
+                        </Callout>
 
-                    <h3>Getting Schema in C++ Code</h3>
-                    <p>
-                        If you need to access a schema at runtime for inspection or validation:
-                    </p>
+                        <h2>Troubleshooting</h2>
 
-                    <LanguageToggleProvider>
+                        <h3>My Class Doesn't Appear in the Cache</h3>
+                        <p>
+                            Make sure:
+                        </p>
+                        <ul className="space-y-1">
+                            <li>Your class implements IJsonSchema</li>
+                            <li>Your project has been compiled</li>
+                            <li>The cache asset is set in Project Settings → Plugins → JSON Object & Schema Utility</li>
+                            <li>Your class is in a loaded module</li>
+                        </ul>
+
+                        <p className="mt-2">
+                            If these are all correct, try manually rebuilding the cache via <strong>Tools → Rebuild JSON Schema Cache</strong>.
+                        </p>
+
+                        <h3>Schema is Out of Date After Code Changes</h3>
+                        <p>
+                            If you modify a class's properties and the schema hasn't updated:
+                        </p>
+                        <ol className="space-y-1 list-decimal list-inside">
+                            <li>Save your class modifications</li>
+                            <li>Recompile the project (the cache automatically updates)</li>
+                            <li>If still out of date, use <strong>Tools → Rebuild JSON Schema Cache</strong></li>
+                        </ol>
+
+                        <h3>Getting Schema in C++ Code</h3>
+                        <p>
+                            If you need to access a schema at runtime for inspection or validation:
+                        </p>
+
                         <CodeExample
                             title="Accessing Schema at Runtime"
                             description="Retrieve and inspect a schema in C++ code"
@@ -295,7 +288,6 @@ if (!Schema)
                         />
                     </LanguageToggleProvider>
                 </div>
-
                 <PageFooter />
             </PageContainer>
         </SiteDocumentation>

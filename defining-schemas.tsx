@@ -16,16 +16,10 @@ export default function DefiningSchemaPage() {
         <SiteDocumentation>
             <PageContainer>
                 <PageHeader />
-
-                <LanguageToggleProvider>
-                    <div className="space-y-6">
-                        <p className="text-lg text-muted-foreground">
-                            Define your JSON schema directly in your Unreal Engine class using UPROPERTY metadata. The plugin leverages Unreal's reflection system to generate schemas at compile-time. Your class definition becomes your schema definition, and all UPROPERTY metadata is automatically translated to JSON Schema properties.
-                        </p>
-
-                        <h2>Schema Generation from Reflection</h2>
+                <div>
+                    <LanguageToggleProvider>
                         <p>
-                            Every UPROPERTY-decorated property in your class is automatically included in the generated JSON schema. The schema includes type information, constraints, and documentation based on your metadata. This schema can be exported for use with external APIs that follow the JSON Schema specification.
+                            Define your JSON schema directly in your Unreal Engine class using UPROPERTY metadata. The plugin leverages Unreal's reflection system to generate schemas at compile-time. Your class definition becomes your schema definition, and all UPROPERTY metadata is automatically translated to JSON Schema properties. The schema includes type information, constraints, and documentation. It can be exported for use with external APIs that follow the JSON Schema specification.
                         </p>
 
                         <h2>Excluding Properties</h2>
@@ -39,18 +33,38 @@ export default function DefiningSchemaPage() {
                             cppCode={`UCLASS()
 class ACharacter : public AActor, public IJsonSchema
 {
-    GENERATED_BODY()
+GENERATED_BODY()
 public:
-    // This property IS included in the schema
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString CharacterName;
+// This property IS included in the schema
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
+FString CharacterName;
 
-    // This property is NOT included (excluded from schema)
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_ExcludeFromSchema))
-    int32 InternalCounter;
+// This property is NOT included (excluded from schema)
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_ExcludeFromSchema))
+int32 InternalCounter;
 };`}
                         />
+
+
+                        <h2>Property Descriptions</h2>
+                        <p>
+                            Property descriptions are automatically included in the generated JSON schema. The plugin sources descriptions from two places, with ToolTip metadata taking precedence:
+                        </p>
+
+                        <CodeExample
+                            title="Defining Property Descriptions"
+                            description="Use ToolTip metadata or line comments to document properties in your schema"
+                            cppCode={`// Using ToolTip metadata (takes precedence)
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+Meta = (ToolTip = \"The character's current health points\"))\nint32 Health = 100;\n\n// Using line comment (fallback, only used if ToolTip is not present)\n// Maximum mana this character can have\nUPROPERTY(EditAnywhere, BlueprintReadWrite)\nint32 MaxMana = 50;\n\n// ToolTip takes precedence over line comment\n// This comment will be ignored\nUPROPERTY(EditAnywhere, BlueprintReadWrite,\n    Meta = (ToolTip = \"This is the actual description\"))\nfloat AttackSpeed = 1.0f;`}
+                        />
+
+                        <Callout type="tip" title="Best Practice for Documentation">
+                            <p>
+                                When both ToolTip metadata and a line comment are present, the ToolTip value is used. Use <code>ToolTip</code> metadata to explicitly control the JSON schema descriptions per property, if you need more extensive code comments, which should not go into the schema.
+                            </p>
+                        </Callout>
 
                         <h2>Optional Properties</h2>
                         <p>
@@ -62,19 +76,19 @@ public:
                             description="Define properties that don't need to be present in JSON"
                             cppCode={`// Optional string property
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Optional,
-            ToolTip = "Optional character biography"))
+Meta = (JsonSchema_Optional,
+        ToolTip = "Optional character biography"))
 FString Biography;
 
 // Optional nested object
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Optional,
-            ToolTip = "Optional special equipment"))
+Meta = (JsonSchema_Optional,
+        ToolTip = "Optional special equipment"))
 UEquipment* SpecialEquipment;
 
 // Optional enumeration
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Optional))
+Meta = (JsonSchema_Optional))
 ECharacterClass SecondaryClass;`}
                         />
 
@@ -89,26 +103,26 @@ ECharacterClass SecondaryClass;`}
                             cppCode={`UCLASS()
 class AGameCharacter : public ACharacter, public IJsonSchema
 {
-    GENERATED_BODY()
+GENERATED_BODY()
 public:
-    virtual TArray<FName> GetOptionalPropertyOverrides() const override
-    {
-        // These properties will be treated as optional during deserialization
-        // regardless of their JsonSchema_Optional metadata
-        return {
-            GET_MEMBER_NAME_CHECKED(AGameCharacter, Biography),
-            GET_MEMBER_NAME_CHECKED(AGameCharacter, SpecialEquipment)
-        };
-    }
+virtual TArray<FName> GetOptionalPropertyOverrides() const override
+{
+    // These properties will be treated as optional during deserialization
+    // regardless of their JsonSchema_Optional metadata
+    return {
+        GET_MEMBER_NAME_CHECKED(AGameCharacter, Biography),
+        GET_MEMBER_NAME_CHECKED(AGameCharacter, SpecialEquipment)
+    };
+}
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString CharacterName;
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
+FString CharacterName;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString Biography;
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
+FString Biography;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    UEquipment* SpecialEquipment;
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UEquipment* SpecialEquipment;
 };`}
                         />
 
@@ -122,26 +136,26 @@ public:
                             description="Define string properties with regex patterns and format specifications"
                             cppCode={`// String with regex pattern
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Pattern = "^[a-zA-Z0-9_]+$",
-            ToolTip = "Username must be alphanumeric with underscores"))
+Meta = (JsonSchema_Pattern = "^[a-zA-Z0-9_]+$",
+        ToolTip = "Username must be alphanumeric with underscores"))
 FString Username;
 
 // String with UUID format
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Format = "uuid",
-            ToolTip = "Unique identifier"))
+Meta = (JsonSchema_Format = "uuid",
+        ToolTip = "Unique identifier"))
 FString UniqueID;
 
 // String with email format
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Format = "email",
-            ToolTip = "Contact email address"))
+Meta = (JsonSchema_Format = "email",
+        ToolTip = "Contact email address"))
 FString ContactEmail;
 
 // String with URI format
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Format = "uri",
-            ToolTip = "Web address"))
+Meta = (JsonSchema_Format = "uri",
+        ToolTip = "Web address"))
 FString WebsiteUrl;`}
                         />
 
@@ -159,26 +173,26 @@ FString WebsiteUrl;`}
                             description="Define numeric properties with min/max bounds and divisibility rules"
                             cppCode={`// Integer with inclusive min/max bounds
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Minimum = "1", JsonSchema_Maximum = "100",
-            ToolTip = "Health points (1-100)"))
+Meta = (JsonSchema_Minimum = "1", JsonSchema_Maximum = "100",
+        ToolTip = "Health points (1-100)"))
 int32 Health = 100;
 
 // Float with exclusive minimum (value must be greater than 0)
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Minimum = "0", JsonSchema_ExclusiveMinimum,
-            ToolTip = "Damage multiplier (must be > 0)"))
+Meta = (JsonSchema_Minimum = "0", JsonSchema_ExclusiveMinimum,
+        ToolTip = "Damage multiplier (must be > 0)"))
 float DamageMultiplier = 1.0f;
 
 // Numeric value that must be a multiple of a specific number
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_MultipleOf = "0.5",
-            ToolTip = "Attack speed (must be multiple of 0.5)"))
+Meta = (JsonSchema_MultipleOf = "0.5",
+        ToolTip = "Attack speed (must be multiple of 0.5)"))
 float AttackSpeed = 1.0f;
 
 // Using exclusive maximum
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_Maximum = "1.0", JsonSchema_ExclusiveMaximum,
-            ToolTip = "Damage reduction (must be < 1.0)"))
+Meta = (JsonSchema_Maximum = "1.0", JsonSchema_ExclusiveMaximum,
+        ToolTip = "Damage reduction (must be < 1.0)"))
 float DamageReduction = 0.5f;`}
                         />
 
@@ -192,19 +206,19 @@ float DamageReduction = 0.5f;`}
                             description="Define array properties with min and max item count constraints"
                             cppCode={`// Array with item count constraints
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_MinItems = "1", JsonSchema_MaxItems = "5",
-            ToolTip = "Special abilities (1-5 abilities)"))
+Meta = (JsonSchema_MinItems = "1", JsonSchema_MaxItems = "5",
+        ToolTip = "Special abilities (1-5 abilities)"))
 TArray<FString> Abilities;
 
 // Array with minimum items required
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (JsonSchema_MinItems = "3",
-            ToolTip = "RGB color components (at least 3 items)"))
+Meta = (JsonSchema_MinItems = "3",
+        ToolTip = "RGB color components (at least 3 items)"))
 TArray<int32> ColorValues;
 
 // Array with no constraints
 UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (ToolTip = "List of inventory items"))
+Meta = (ToolTip = "List of inventory items"))
 TArray<FString> InventoryItems;`}
                         />
 
@@ -219,23 +233,23 @@ TArray<FString> InventoryItems;`}
                             cppCode={`UENUM(BlueprintType)
 enum class ECharacterClass : uint8
 {
-    Warrior UMETA(DisplayName = "Warrior"),
-    Mage UMETA(DisplayName = "Mage"),
-    Rogue UMETA(DisplayName = "Rogue"),
+Warrior UMETA(DisplayName = "Warrior"),
+Mage UMETA(DisplayName = "Mage"),
+Rogue UMETA(DisplayName = "Rogue"),
 };
 
 UCLASS()
 class ACharacter : public AActor, public IJsonSchema
 {
-    GENERATED_BODY()
+GENERATED_BODY()
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    ECharacterClass CharacterClass = ECharacterClass::Warrior;
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
+ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_Optional,
-                ToolTip = "Secondary character class"))
-    ECharacterClass SecondaryClass;
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_Optional,
+            ToolTip = "Secondary character class"))
+ECharacterClass SecondaryClass;
 };
 
 // Serialized as: {"character_class":"Warrior","secondary_class":"Mage"}
@@ -253,31 +267,31 @@ public:
                             cppCode={`UCLASS()
 class UEquipment : public UObject, public IJsonSchema
 {
-    GENERATED_BODY()
+GENERATED_BODY()
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    FString EquipmentName;
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
+FString EquipmentName;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_Minimum = "1", JsonSchema_Maximum = "50",
-                ToolTip = "Defense bonus provided"))
-    int32 DefenseBonus = 0;
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_Minimum = "1", JsonSchema_Maximum = "50",
+            ToolTip = "Defense bonus provided"))
+int32 DefenseBonus = 0;
 };
 
 UCLASS()
 class ACharacter : public AActor, public IJsonSchema
 {
-    GENERATED_BODY()
+GENERATED_BODY()
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_Optional,
-                ToolTip = "Optional equipped armor"))
-    UEquipment* Armor;
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_Optional,
+            ToolTip = "Optional equipped armor"))
+UEquipment* Armor;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_Optional,
-                ToolTip = "Optional weapon"))
-    UEquipment* Weapon;
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_Optional,
+            ToolTip = "Optional weapon"))
+UEquipment* Weapon;
 };`}
                         />
 
@@ -296,44 +310,44 @@ public:
                             cppCode={`UENUM(BlueprintType)
 enum class ECharacterRarity : uint8
 {
-    Common, Uncommon, Rare, Epic, Legendary
+Common, Uncommon, Rare, Epic, Legendary
 };
 
 UCLASS()
 class AGameCharacter : public ACharacter, public IJsonSchema
 {
-    GENERATED_BODY()
+GENERATED_BODY()
 
 public:
-    // String with pattern
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_Pattern = "^[a-zA-Z ]+$",
-                ToolTip = "Character name (letters and spaces only)"))
-    FString CharacterName;
+// String with pattern
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_Pattern = "^[a-zA-Z ]+$",
+            ToolTip = "Character name (letters and spaces only)"))
+FString CharacterName;
 
-    // Numeric range
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_Minimum = "1", JsonSchema_Maximum = "100",
-                ToolTip = "Character level"))
-    int32 Level = 1;
+// Numeric range
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_Minimum = "1", JsonSchema_Maximum = "100",
+            ToolTip = "Character level"))
+int32 Level = 1;
 
-    // Array with constraints
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_MinItems = "1", JsonSchema_MaxItems = "5",
-                ToolTip = "Special abilities (1-5)"))
-    TArray<FString> SpecialAbilities;
+// Array with constraints
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_MinItems = "1", JsonSchema_MaxItems = "5",
+            ToolTip = "Special abilities (1-5)"))
+TArray<FString> SpecialAbilities;
 
-    // Optional enumeration
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_Optional,
-                ToolTip = "Character rarity"))
-    ECharacterRarity Rarity = ECharacterRarity::Common;
+// Optional enumeration
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_Optional,
+            ToolTip = "Character rarity"))
+ECharacterRarity Rarity = ECharacterRarity::Common;
 
-    // Optional description
-    UPROPERTY(EditAnywhere, BlueprintReadWrite,
-        Meta = (JsonSchema_Optional,
-                ToolTip = "Optional character description"))
-    FString Description;
+// Optional description
+UPROPERTY(EditAnywhere, BlueprintReadWrite,
+    Meta = (JsonSchema_Optional,
+            ToolTip = "Optional character description"))
+FString Description;
 };`}
                         />
 
@@ -402,31 +416,8 @@ public:
                                 </tr>
                             </tbody>
                         </table>
-
-                        <h2>Property Descriptions</h2>
-                        <p>
-                            Property descriptions are automatically included in the generated JSON schema. The plugin sources descriptions from two places, with ToolTip metadata taking precedence:
-                        </p>
-
-                        <CodeExample
-                            title="Defining Property Descriptions"
-                            description="Use ToolTip metadata or line comments to document properties in your schema"
-                            cppCode={`// Using ToolTip metadata (takes precedence)
-UPROPERTY(EditAnywhere, BlueprintReadWrite,
-    Meta = (ToolTip = \"The character's current health points\"))\nint32 Health = 100;\n\n// Using line comment (fallback, only used if ToolTip is not present)\n// Maximum mana this character can have\nUPROPERTY(EditAnywhere, BlueprintReadWrite)\nint32 MaxMana = 50;\n\n// ToolTip takes precedence over line comment\n// This comment will be ignored\nUPROPERTY(EditAnywhere, BlueprintReadWrite,\n    Meta = (ToolTip = \"This is the actual description\"))\nfloat AttackSpeed = 1.0f;`}
-                            />
-                            <p className="mt-4">
-                                When both ToolTip metadata and a line comment are present, the ToolTip value is used. Line comments are useful for quick documentation during development, while ToolTip metadata provides an explicit, formal description that will definitely appear in the schema.
-                            </p>
-
-                        <Callout type="tip" title="Best Practice for Documentation">
-                            <p>
-                                Use <code>ToolTip</code> metadata for important public properties and when you need guaranteed documentation. Line comments work well for internal properties or when ToolTip isn't available.
-                            </p>
-                        </Callout>
-                    </div>
-                </LanguageToggleProvider>
-
+                    </LanguageToggleProvider>
+                </div>
                 <PageFooter />
             </PageContainer>
         </SiteDocumentation>
