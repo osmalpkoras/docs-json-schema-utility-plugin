@@ -32,7 +32,7 @@ export default {
         },
         fab: {
             label: 'FAB',
-            href: 'https://www.fab.com/listings/37f4c8e1-0f72-48ad-9659-2d9801149e16',
+            href: 'https://www.fab.com/listings/0ea51c3b-d3b6-4ee3-9f6e-03f97a158dba',
             icon: 'ShoppingCart',
             ariaLabel: 'View on FAB - Unreal Engine Marketplace'
         },
