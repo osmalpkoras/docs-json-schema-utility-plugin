@@ -11,7 +11,7 @@ export const metadata = {
 
 import Image from 'next/image';
 import { SiteDocumentation, PageContainer, PageHeader, PageFooter } from '@/components/layout';
-import { Callout, Step, StepList, CodeExample, LanguageToggleProvider } from '@/components/doc-components';
+import { Callout, Step, StepList, LanguageToggleProvider } from '@/components/doc-components';
 import { Button } from '@/components/ui/button';
 import jsuLogo from '@/assets/json-schema-launcher.png';
 import { useSite } from '@/components/layout';

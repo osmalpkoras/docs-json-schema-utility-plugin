@@ -9,7 +9,7 @@ export const metadata = {
 } satisfies ContentPage;
 
 import { SiteDocumentation, PageContainer, PageHeader, PageFooter } from '@/components/layout';
-import { Callout, CodeExample, LanguageToggleProvider } from '@/components/doc-components';
+import { Callout, Example, ExampleTitle, ExampleContent, ExampleCpp, LanguageToggleProvider } from '@/components/doc-components';
 
 export default function SchemaCachePage() {
     return (
@@ -104,10 +104,13 @@ export default function SchemaCachePage() {
                             The runtime automatically uses the configured cache during serialization and deserialization. You typically don't need to interact with it directly, but if needed, you can access it programmatically:
                         </p>
 
-                        <CodeExample
-                            title="Accessing the Schema Cache"
-                            description="Get and use the schema cache at runtime"
-                            cppCode={`// Get the effective schema cache
+                        <Example>
+                            <ExampleTitle>Accessing the Schema Cache</ExampleTitle>
+                            <ExampleContent>
+                                Get and use the schema cache at runtime.
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`// Get the effective schema cache
 UJsonSchemaCache* Cache = UJsonSchemaUtilityRuntimeSettings::GetEffectiveSchemaCache();
 
 // Find a schema for a specific class
@@ -118,28 +121,24 @@ if (Schema)
     // Use the schema for validation or inspection
     UE_LOG(LogTemp, Warning, TEXT("Schema found for UMyClass"));
 }`}
-                        />
+                            </ExampleCpp>
+                        </Example>
 
-                        <h2>Serialization with Cache</h2>
-                        <p>
-                            When you serialize an object, the plugin uses the cache to efficiently convert it to JSON:
-                        </p>
+                        <Example>
+                            <ExampleTitle>Serialization with Cached Schema</ExampleTitle>
+                            <ExampleContent>
+                                When you serialize an object, the plugin uses the cache to efficiently convert it to JSON:
 
-                        <ol className="space-y-2 list-decimal list-inside">
-                            <li>Look up the schema for the object's class</li>
-                            <li>Iterate through all properties defined in the schema</li>
-                            <li>Convert each property value to a JSON representation</li>
-                            <li>Build and return the final JSON object</li>
-                        </ol>
-
-                        <p>
-                            Since the schema is pre-built, no expensive reflection is needed at runtime:
-                        </p>
-
-                        <CodeExample
-                            title="Serialization with Cached Schema"
-                            description="Efficient serialization without reflection overhead"
-                            cppCode={`// Efficient serialization using cached schema
+                                <ol className="space-y-2 list-decimal list-inside">
+                                    <li>Look up the schema for the object's class</li>
+                                    <li>Iterate through all properties defined in the schema</li>
+                                    <li>Convert each property value to a JSON representation</li>
+                                    <li>Build and return the final JSON object</li>
+                                </ol>
+                                Since the schema is pre-built, no expensive reflection is needed at runtime:
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`// Efficient serialization using cached schema
 AMyCharacter* Character = GetWorld()->SpawnActor<AMyCharacter>();
 Character->CharacterName = TEXT("Hero");
 Character->Level = 5;
@@ -147,24 +146,23 @@ Character->Level = 5;
 // This uses the cached schema - no reflection overhead
 FString JsonString = Character->ToJsonString();
 // Result: {"character_name":"Hero","level":5}`}
-                        />
+                            </ExampleCpp>
+                        </Example>
 
-                        <h2>Deserialization with Cache</h2>
-                        <p>
-                            During deserialization, the cache enables the plugin to efficiently reconstruct objects from JSON:
-                        </p>
+                        <Example>
+                            <ExampleTitle>Deserialization with Cached Schema</ExampleTitle>
+                            <ExampleContent>
+                                During deserialization, the cache enables the plugin to efficiently reconstruct objects from JSON:
 
-                        <ol className="space-y-2 list-decimal list-inside">
-                            <li>Look up the schema for the target class</li>
-                            <li>Parse the incoming JSON</li>
-                            <li>Map JSON fields to object properties based on the schema</li>
-                            <li>Apply the values to the object</li>
-                        </ol>
-
-                        <CodeExample
-                            title="Deserialization with Cached Schema"
-                            description="Efficient deserialization from JSON using the cached schema"
-                            cppCode={`// Efficient deserialization using cached schema
+                                <ol className="space-y-2 list-decimal list-inside">
+                                    <li>Look up the schema for the target class</li>
+                                    <li>Parse the incoming JSON</li>
+                                    <li>Map JSON fields to object properties based on the schema</li>
+                                    <li>Apply the values to the object</li>
+                                </ol>
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`// Efficient deserialization using cached schema
 FString JsonInput = TEXT(R"({
   "character_name": "Hero",
   "level": 5
@@ -177,7 +175,8 @@ if (Character->FromJsonString(JsonInput))
     UE_LOG(LogTemp, Warning, TEXT("Character: %s (Level %d)"),
         *Character->CharacterName, Character->Level);
 }`}
-                        />
+                            </ExampleCpp>
+                        </Example>
 
                         <h2>Manual Cache Rebuild</h2>
                         <p>
@@ -260,15 +259,13 @@ if (Character->FromJsonString(JsonInput))
                             <li>If still out of date, use <strong>Tools → Rebuild JSON Schema Cache</strong></li>
                         </ol>
 
-                        <h3>Getting Schema in C++ Code</h3>
-                        <p>
-                            If you need to access a schema at runtime for inspection or validation:
-                        </p>
-
-                        <CodeExample
-                            title="Accessing Schema at Runtime"
-                            description="Retrieve and inspect a schema in C++ code"
-                            cppCode={`// Get the cache
+                        <Example>
+                            <ExampleTitle>Getting Schema in C++ Code</ExampleTitle>
+                            <ExampleContent>
+                                If you need to access a schema at runtime for inspection or validation, you can retrieve and inspect a schema in C++ code.
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`// Get the cache
 UJsonSchemaCache* Cache = UJsonSchemaUtilityRuntimeSettings::GetEffectiveSchemaCache();
 if (!Cache)
 {
@@ -285,7 +282,8 @@ if (!Schema)
 }
 
 // Now you can use the schema for validation or inspection`}
-                        />
+                            </ExampleCpp>
+                        </Example>
                     </LanguageToggleProvider>
                 </div>
                 <PageFooter />

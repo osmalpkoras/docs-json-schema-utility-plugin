@@ -9,7 +9,7 @@ export const metadata = {
 } satisfies ContentPage;
 
 import { SiteDocumentation, PageContainer, PageHeader, PageFooter } from '@/components/layout';
-import { Callout, CodeExample, LanguageToggleProvider } from '@/components/doc-components';
+import { Callout, Example, ExampleTitle, ExampleContent, ExampleCpp, LanguageToggleProvider } from '@/components/doc-components';
 
 export default function SerializationPage() {
     return (
@@ -23,20 +23,18 @@ export default function SerializationPage() {
                             Serialization converts your UObject instances to JSON, and deserialization reconstructs them from JSON. Both operations use the cached schema for efficient, performant conversion. It is useful for saving player progress, network replication, API communication, and configuration management.
                         </p>
 
-                        <h2>Serialization: Objects to JSON</h2>
+                        <h2>Serialization: Objects to JSON and back</h2>
                         <p>
                             Convert any object implementing IJsonSchema to JSON using one of two methods:
                         </p>
 
-                        <h3>To JSON Object</h3>
-                        <p>
-                            Get a structured FJsonObject that you can manipulate before final serialization:
-                        </p>
-
-                        <CodeExample
-                            title="Serialize to JSON Object"
-                            description="Convert object to FJsonObject for manipulation"
-                            cppCode={`AMyCharacter* Character = GetWorld()->SpawnActor<AMyCharacter>();
+                        <Example>
+                            <ExampleTitle>Serialize to JSON Object</ExampleTitle>
+                            <ExampleContent>
+                                Get a structured FJsonObject that you can manipulate before final serialization:
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`AMyCharacter* Character = GetWorld()->SpawnActor<AMyCharacter>();
 Character->CharacterName = TEXT("Aragorn");
 Character->Level = 20;
 Character->Health = 150;
@@ -53,17 +51,16 @@ if (JsonObject.IsValid())
     // Or manipulate the object before further processing
     JsonObject->SetNumberField(TEXT("level"), 25);
 }`}
-                        />
+                            </ExampleCpp>
+                        </Example>
 
-                        <h3>To JSON String</h3>
-                        <p>
-                            Directly serialize to a JSON string for transmission, storage, or logging:
-                        </p>
-
-                        <CodeExample
-                            title="Serialize to JSON String"
-                            description="Convert object directly to JSON string"
-                            cppCode={`AMyCharacter* Character = GetWorld()->SpawnActor<AMyCharacter>();
+                        <Example>
+                            <ExampleTitle>Serialize to JSON String</ExampleTitle>
+                            <ExampleContent>
+                                Directly serialize to a JSON string for transmission, storage, or logging:
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`AMyCharacter* Character = GetWorld()->SpawnActor<AMyCharacter>();
 Character->CharacterName = TEXT("Aragorn");
 Character->Level = 20;
 
@@ -72,7 +69,8 @@ FString JsonString = Character->ToJsonString();
 
 // Result example:
 // {"character_name":"Aragorn","level":20,"health":150}`}
-                        />
+                            </ExampleCpp>
+                        </Example>
 
                         <Callout type="tip" title="Schema-Generated Property Names">
                             <p>
@@ -80,20 +78,16 @@ FString JsonString = Character->ToJsonString();
                             </p>
                         </Callout>
 
-                        <h2>Deserialization: JSON to Objects</h2>
                         <p>
                             Reconstruct objects from JSON using the schema definition:
                         </p>
-
-                        <h3>From JSON Object</h3>
-                        <p>
-                            Initialize an object from a structured FJsonObject:
-                        </p>
-
-                        <CodeExample
-                            title="Deserialize from JSON Object"
-                            description="Initialize object from FJsonObject structure"
-                            cppCode={`// Create a new character instance
+                        <Example>
+                            <ExampleTitle>Deserialize from JSON Object</ExampleTitle>
+                            <ExampleContent>
+                                Initialize an object from a structured FJsonObject:
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`// Create a new character instance
 AMyCharacter* Character = GetWorld()->SpawnActor<AMyCharacter>();
 
 // Create JSON data
@@ -114,17 +108,15 @@ else
     // Failed - JSON didn't match schema constraints
     UE_LOG(LogTemp, Error, TEXT("Failed to deserialize character"));
 }`}
-                        />
-
-                        <h3>From JSON String</h3>
-                        <p>
-                            Initialize an object directly from a JSON string:
-                        </p>
-
-                        <CodeExample
-                            title="Deserialize from JSON String"
-                            description="Initialize object directly from JSON string"
-                            cppCode={`AMyCharacter* Character = GetWorld()->SpawnActor<AMyCharacter>();
+                            </ExampleCpp>
+                        </Example>
+                        <Example>
+                            <ExampleTitle>Deserialize from JSON String</ExampleTitle>
+                            <ExampleContent>
+                                Initialize an object directly from a JSON string:
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`AMyCharacter* Character = GetWorld()->SpawnActor<AMyCharacter>();
 
 FString JsonInput = TEXT(R"(
 {
@@ -145,49 +137,18 @@ else
     // Failed - invalid JSON or constraint violation
     UE_LOG(LogTemp, Error, TEXT("Deserialization failed"));
 }`}
-                        />
+                            </ExampleCpp>
+                        </Example>
 
-                        <h2>Round-Trip Serialization</h2>
-                        <p>
-                            A key feature is round-trip serialization: convert object → JSON → object and preserve all data:
-                        </p>
 
-                        <CodeExample
-                            title="Round-Trip Serialization"
-                            description="Serialize to JSON and back with full data integrity"
-                            cppCode={`// Create original object
-AMyCharacter* Original = GetWorld()->SpawnActor<AMyCharacter>();
-Original->CharacterName = TEXT("Boromir");
-Original->Level = 19;
-Original->Health = 180;
 
-// Convert to JSON and back
-FString JsonString = Original->ToJsonString();
-
-AMyCharacter* Reconstructed = GetWorld()->SpawnActor<AMyCharacter>();
-Reconstructed->FromJsonString(JsonString);
-
-// Data is identical
-check(Reconstructed->CharacterName == Original->CharacterName);
-check(Reconstructed->Level == Original->Level);
-check(Reconstructed->Health == Original->Health);`}
-                        />
-
-                        <Callout type="info" title="Data Integrity">
-                            <p>
-                                Round-trip serialization is lossless for all supported property types. Complex objects and arrays are fully preserved.
-                            </p>
-                        </Callout>
-
-                        <h2>Error Handling</h2>
-                        <p>
-                            Serialization returns a JSON object or string, and deserialization returns a boolean indicating success:
-                        </p>
-
-                        <CodeExample
-                            title="Error Handling"
-                            description="Check success status for serialization and deserialization"
-                            cppCode={`// Serialization
+                        <Example>
+                            <ExampleTitle>Error Handling</ExampleTitle>
+                            <ExampleContent>
+                                Serialization returns a JSON object or string, and deserialization returns a boolean indicating success:
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`// Serialization
 TSharedPtr<FJsonObject> JsonObject = Character->ToJson();
 if (JsonObject.IsValid())
 {
@@ -213,19 +174,18 @@ else
     UE_LOG(LogTemp, Error, TEXT("Deserialization failed"));
     // Character remains in default state
 }`}
-                        />
+                            </ExampleCpp>
+                        </Example>
 
                         <h2>Working with Complex Types</h2>
 
-                        <h3>Arrays</h3>
-                        <p>
-                            Arrays are automatically serialized and deserialized:
-                        </p>
-
-                        <CodeExample
-                            title="Array Serialization"
-                            description="Automatically serialize and deserialize array properties"
-                            cppCode={`UCLASS()
+                        <Example>
+                            <ExampleTitle>Array Serialization</ExampleTitle>
+                            <ExampleContent>
+                                Automatically serialize and deserialize array properties.
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`UCLASS()
 class AParty : public AActor, public IJsonSchema
 {
     GENERATED_BODY()
@@ -246,17 +206,17 @@ FString JsonString = Party->ToJsonString();
 AParty* LoadedParty = GetWorld()->SpawnActor<AParty>();
 LoadedParty->FromJsonString(JsonString);
 // MemberNames now contains the three original names`}
-                        />
+                            </ExampleCpp>
+                        </Example>
 
                         <h3>Nested Objects</h3>
-                        <p>
-                            Nested objects are recursively serialized and deserialized:
-                        </p>
-
-                        <CodeExample
-                            title="Nested Object Serialization"
-                            description="Recursively serialize and deserialize nested IJsonSchema objects"
-                            cppCode={`UCLASS()
+                        <Example>
+                            <ExampleTitle>Nested Object Serialization</ExampleTitle>
+                            <ExampleContent>
+                                Recursively serialize and deserialize nested IJsonSchema objects.
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`UCLASS()
 class UWeapon : public UObject, public IJsonSchema
 {
     GENERATED_BODY()
@@ -290,7 +250,8 @@ Warrior->EquippedWeapon->Damage = 50;
 // Serialize - includes nested weapon data
 FString JsonString = Warrior->ToJsonString();
 // Result: {"name":"Aragorn","equipped_weapon":{"name":"Anduril","damage":50}}`}
-                        />
+                            </ExampleCpp>
+                        </Example>
                     </LanguageToggleProvider>
                 </div>
 
