@@ -38,17 +38,17 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 items-center justify-center">
-                    <Button>
+                    <Button asChild>
                         <a href={siteConfig.headerLinks["fab"].href} target="_blank" rel="noopener noreferrer">
                             Buy on FAB
                         </a>
                     </Button>
-                    <Button variant="outline">
+                    <Button asChild variant="outline">
                         <a href={siteConfig.headerLinks["github"].href} target="_blank" rel="noopener noreferrer">
                             View on GitHub
                         </a>
                     </Button>
-                    <Button variant="outline">
+                    <Button asChild variant="outline">
                         <a href={siteConfig.headerLinks["discord"].href} target="_blank" rel="noopener noreferrer">
                             Join Discord
                         </a>
