@@ -38,17 +38,17 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 items-center justify-center">
-                    <Button asChild className="bg-amber-300 hover:bg-amber-300/80">
+                    <Button>
                         <a href={siteConfig.headerLinks["fab"].href} target="_blank" rel="noopener noreferrer">
                             Buy on FAB
                         </a>
                     </Button>
-                    <Button variant="outline" asChild>
+                    <Button variant="outline">
                         <a href={siteConfig.headerLinks["github"].href} target="_blank" rel="noopener noreferrer">
                             View on GitHub
                         </a>
                     </Button>
-                    <Button variant="outline" asChild>
+                    <Button variant="outline">
                         <a href={siteConfig.headerLinks["discord"].href} target="_blank" rel="noopener noreferrer">
                             Join Discord
                         </a>
@@ -133,6 +133,6 @@ export default function HomePage() {
 
                 <PageFooter />
             </PageContainer>
-        </SiteDocumentation>
+        </SiteDocumentation >
     );
 }
