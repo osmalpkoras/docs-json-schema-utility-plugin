@@ -13,7 +13,7 @@ import Image from 'next/image';
 import { SiteDocumentation, PageContainer, PageHeader, PageFooter } from '@/components/layout';
 import { Callout, Step, StepList, LanguageToggleProvider } from '@/components/doc-components';
 import { Button } from '@/components/ui/button';
-import jsuLogo from '@/assets/json-schema-launcher.png';
+import jsuLogo from '@/assets/JSU Logo.png';
 import { useSite } from '@/components/layout';
 
 export default function HomePage() {
