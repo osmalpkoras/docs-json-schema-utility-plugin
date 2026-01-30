@@ -60,12 +60,9 @@ export default function HomePage() {
                         The plugin is designed to make it easy to work with and integrate JSON Schema into your projects: define schemas using UPROPERTY metadata, serialize objects to JSON and deserialize back with full data integrity, export schemas for external APIs like OpenAI, and work seamlessly across your game logic and runtime code. Whether for in-editor tools or runtime gameplay, the plugin provides a solid foundation for data-driven systems with structured validation.
                     </p>
 
-                    <div className="border-l-2 border-blue-500 pl-4 bg-blue-50 dark:bg-blue-950/20 rounded-r p-4">
-                        <p className="font-semibold">Core Idea</p>
-                        <p className="text-sm text-muted-foreground mt-2">
-                            Implement the IJsonSchema interface on your UClass to automatically get JSON serialization, deserialization, and JSON Schema generation with full support for OpenAI's structured output specification.
-                        </p>
-                    </div>
+                    <Callout type="info" title="Core Idea">
+                        Implement the <code>IJsonSchema</code> interface on your UClass to automatically get JSON serialization, deserialization, and JSON Schema generation with full support for OpenAI's structured output specification.
+                    </Callout>
 
                     <h2>What It Does</h2>
                     <ul className="space-y-2">
