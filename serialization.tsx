@@ -209,6 +209,68 @@ LoadedParty->FromJsonString(JsonString);
                             </ExampleCpp>
                         </Example>
 
+                        <h3>FVector Properties</h3>
+                        <Example>
+                            <ExampleTitle>FVector Round-Trip</ExampleTitle>
+                            <ExampleContent>
+                                <code>FVector</code> properties round-trip through a JSON object with
+                                <code>x</code>, <code>y</code>, and <code>z</code> number fields. All three
+                                components are required during deserialization — missing components fail
+                                validation with a clear error message.
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`UCLASS()
+class ASpawnPoint : public AActor, public IJsonSchema
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    FVector Location;
+};
+
+// Serialize
+ASpawnPoint* Point = GetWorld()->SpawnActor<ASpawnPoint>();
+Point->Location = FVector(100.0, 50.0, 0.0);
+FString JsonString = Point->ToJsonString();
+// Result: {"location":{"x":100.0,"y":50.0,"z":0.0}}
+
+// Deserialize
+ASpawnPoint* Loaded = GetWorld()->SpawnActor<ASpawnPoint>();
+Loaded->FromJsonString(TEXT(R"({"location":{"x":1,"y":2,"z":3}})"));
+// Loaded->Location is now (1, 2, 3)`}
+                            </ExampleCpp>
+                        </Example>
+
+                        <h3>Soft Object References</h3>
+                        <Example>
+                            <ExampleTitle>Soft Reference Round-Trip</ExampleTitle>
+                            <ExampleContent>
+                                Soft object pointers serialize to a string (the underlying
+                                <code>FSoftObjectPath</code>) and deserialize back without forcing the asset
+                                to load.
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`UCLASS()
+class UItemDefinition : public UObject, public IJsonSchema
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    TSoftObjectPtr<UTexture2D> Icon;
+};
+
+UItemDefinition* Item = NewObject<UItemDefinition>();
+Item->Icon = FSoftObjectPath(TEXT("/Game/Icons/Sword.Sword"));
+
+FString JsonString = Item->ToJsonString();
+// Result: {"icon":"/Game/Icons/Sword.Sword"}
+
+UItemDefinition* Loaded = NewObject<UItemDefinition>();
+Loaded->FromJsonString(JsonString);
+// Loaded->Icon now points at the same asset path (not loaded yet)`}
+                            </ExampleCpp>
+                        </Example>
+
                         <h3>Nested Objects</h3>
                         <Example>
                             <ExampleTitle>Nested Object Serialization</ExampleTitle>

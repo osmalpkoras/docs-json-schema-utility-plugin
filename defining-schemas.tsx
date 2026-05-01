@@ -307,6 +307,82 @@ public:
                             <p>Nested objects must also implement IJsonSchema. The schema for nested objects is recursively generated and included in the parent schema, creating a complete hierarchical schema definition.</p>
                         </Callout>
 
+                        <Example>
+                            <ExampleTitle>FVector Properties</ExampleTitle>
+                            <ExampleContent>
+                                <code>FVector</code> properties are mapped to a JSON object with required <code>x</code>, <code>y</code>, and <code>z</code> number fields. No extra metadata is required.
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`UCLASS()
+class ASpawnPoint : public AActor, public IJsonSchema
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite,
+        Meta = (ToolTip = "World location to spawn at"))
+    FVector Location;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite,
+        Meta = (JsonSchema_Optional,
+                ToolTip = "Optional offset applied after spawning"))
+    FVector Offset;
+};
+
+// Generated schema for Location:
+// {
+//     "type": "object",
+//     "description": "World location to spawn at",
+//     "properties": {
+//         "x": {"type": "number"},
+//         "y": {"type": "number"},
+//         "z": {"type": "number"}
+//     },
+//     "required": ["x", "y", "z"]
+// }
+//
+// Serialized JSON example:
+// {"location": {"x": 100.0, "y": 50.0, "z": 0.0}}`}
+                            </ExampleCpp>
+                        </Example>
+
+                        <Callout type="info" title="Other Math Structs">
+                            <p>
+                                Only <code>FVector</code> is wired up today. <code>FVector2D</code> and
+                                <code>FRotator</code> support is planned and tracked in the changelog.
+                                Unsupported struct types are reported with a clear error during schema
+                                generation rather than silently skipped.
+                            </p>
+                        </Callout>
+
+                        <Example>
+                            <ExampleTitle>Soft Object References</ExampleTitle>
+                            <ExampleContent>
+                                <code>FSoftObjectProperty</code> / <code>TSoftObjectPtr&lt;T&gt;</code>
+                                properties are serialized as a string (the underlying
+                                <code>FSoftObjectPath</code>). This lets schemas reference cooked assets
+                                without forcing them to be loaded.
+                            </ExampleContent>
+                            <ExampleCpp>
+                                {`UCLASS()
+class UItemDefinition : public UObject, public IJsonSchema
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite,
+        Meta = (ToolTip = "Soft reference to the item icon"))
+    TSoftObjectPtr<UTexture2D> Icon;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite,
+        Meta = (JsonSchema_Optional,
+                ToolTip = "Optional alternate mesh"))
+    TSoftObjectPtr<UStaticMesh> AltMesh;
+};
+
+// Serialized JSON example:
+// {"icon": "/Game/Icons/Sword.Sword"}`}
+                            </ExampleCpp>
+                        </Example>
+
                         <h2>Complete Example</h2>
                         <p>
                             Here's a comprehensive example combining all schema definition techniques:
